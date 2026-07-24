@@ -26,7 +26,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -74,15 +74,6 @@
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        /* Animation classes for smooth image transitions */
-        .album-art-transition {
-            transition: opacity 0.5s ease-in-out;
-            opacity: 0;
-        }
-        .album-art-visible {
-            opacity: 1;
-        }
 
         /* --- VINYL RECORD STYLES --- */
         .vinyl-container {
@@ -90,7 +81,6 @@
             inset: 0;
             border-radius: 50%;
             background-color: #111;
-            /* Texture for grooves */
             background-image: repeating-radial-gradient(
                 #111 0, 
                 #111 2px, 
@@ -103,7 +93,6 @@
             justify-content: center;
         }
         
-        /* Realistic shine effect on vinyl */
         .vinyl-shine {
             position: absolute;
             inset: 0;
@@ -121,7 +110,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative; /* For absolute positioning of hole/image */
+            position: relative;
             overflow: hidden;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             z-index: 3;
@@ -134,30 +123,22 @@
             background-color: #000;
             border-radius: 50%;
             position: absolute;
-            z-index: 10; /* Hole stays on top of image */
+            z-index: 10;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Spin Animation */
         @keyframes spin-record {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
         
-        /* Class to trigger animation */
         .is-spinning {
             animation: spin-record 4s linear infinite;
         }
         
-        /* Pause animation but keep rotation state when paused */
-        .is-paused {
-            animation-play-state: paused;
-        }
-        
-        /* Listener count animation */
         .fade-text {
             animation: fadeText 0.5s ease-in-out;
         }
@@ -165,11 +146,54 @@
             0% { opacity: 0.5; transform: scale(0.9); }
             100% { opacity: 1; transform: scale(1); }
         }
-
     </style>
 </head>
-<body class="h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+<body class="h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
 
+    <!-- MODAL DE ACTUALIZACIÓN DE APP -->
+    <div id="updateModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="glass-panel max-w-sm w-full p-6 rounded-3xl text-center shadow-2xl border border-pink-500/40 transform transition-all scale-100">
+            
+            <div class="w-16 h-16 bg-pink-500/20 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-pink-500/20">
+                <i class="fas fa-rocket"></i>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-white mb-2">¡Hey... nos actualizamos! 🚀</h3>
+            <p class="text-slate-300 text-sm mb-4 leading-relaxed">
+                Llegó una nueva versión de <strong class="text-pink-400">Radio Fly 103.5</strong> a la Google Play Store.
+            </p>
+
+            <!-- RECUADRO CON INSTRUCCIONES -->
+            <div class="bg-slate-800/90 rounded-2xl p-4 text-left text-xs text-slate-200 mb-6 border border-pink-500/30 shadow-inner">
+                <p class="font-bold text-pink-400 mb-2.5 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                    <i class="fas fa-exclamation-triangle text-amber-400"></i> Pasos para ver la nueva versión:
+                </p>
+                
+                <div class="space-y-2.5">
+                    <div class="flex items-start gap-2.5">
+                        <span class="bg-pink-500/20 text-pink-400 font-bold px-2 py-0.5 rounded-md text-[11px] border border-pink-500/30 shrink-0">1</span>
+                        <p class="leading-snug">Tocá en <strong class="text-white">"Ir a la Play Store"</strong>.</p>
+                    </div>
+
+                    <div class="flex items-start gap-2.5">
+                        <span class="bg-red-500/20 text-red-400 font-bold px-2 py-0.5 rounded-md text-[11px] border border-red-500/30 shrink-0">2</span>
+                        <p class="leading-snug">Desde esa misma pantalla, tocá en <strong class="text-white">Desinstalár..</strong> el paso 3.</p>
+                    </div>
+                    
+                    <div class="flex items-start gap-2.5">
+                        <span class="bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded-md text-[11px] border border-green-500/30 shrink-0">3</span>
+                        <p class="leading-snug">Volvé a tocar en <strong class="text-white">Instalar</strong> para disfrutar de la versión nueva version.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="goToStoreBtn" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold text-base shadow-lg shadow-pink-600/30 transition transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2">
+                <i class="fab fa-google-play text-lg"></i> Ir a la Play Store
+            </button>
+        </div>
+    </div>
+
+    <!-- REPRODUCTOR DE FONDO (BLOQUEADO POR EL MODAL) -->
     <div class="relative w-full max-w-md h-full sm:h-auto sm:rounded-3xl glass-panel shadow-2xl overflow-hidden flex flex-col">
         
         <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-pink-500 rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
@@ -177,50 +201,27 @@
         <!-- Header -->
         <div class="flex justify-between items-center p-6 z-10">
             <button class="text-slate-400 hover:text-white transition"><i class="fas fa-chevron-down"></i></button>
-            
-            <!-- CLOCK DISPLAY (UPDATED: Cyan, Bold, Glow) -->
             <span id="clockDisplay" class="text-2xl font-black tracking-widest text-cyan-400 font-mono drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">--:--:--</span>
-            
-            <!-- Refresh Metadata Button -->
             <button id="refreshMetaBtn" class="text-slate-400 hover:text-white transition" title="Actualizar Datos"><i class="fas fa-sync-alt"></i></button>
         </div>
 
         <!-- Album Art / Logo Area -->
         <div class="flex-1 flex flex-col items-center justify-center p-6 z-10">
-            <!-- Main Disc Container -->
             <div id="discContainer" class="w-64 h-64 rounded-full shadow-2xl border-4 border-slate-700/50 relative mb-6 overflow-hidden flex-shrink-0">
-                
-                <!-- 1. BASE LAYER: Vinyl Record (CSS Generated) -->
                 <div id="vinylRecord" class="vinyl-container">
                     <div class="vinyl-shine"></div>
                     <div class="vinyl-label">
-                        <!-- Black hole in the center -->
                         <div class="vinyl-hole"></div>
-                        
-                        <!-- CENTER IMAGE -->
-                        <img id="centerLabel" 
-                             src="https://i.postimg.cc/WzByDZNW/Untitled-1.png" 
-                             alt="Logo" 
-                             class="absolute inset-0 w-full h-full object-cover">
+                        <img id="centerLabel" src="https://i.postimg.cc/WzByDZNW/Untitled-1.png" alt="Logo" class="absolute inset-0 w-full h-full object-cover">
                     </div>
                 </div>
                 
-                <!-- 2. OVERLAY LAYER: Album Art (Fades in on top) -->
-                <img id="albumCover" 
-                     src="" 
-                     alt="Album Art" 
-                     class="absolute inset-0 w-full h-full object-cover rounded-full transition-opacity duration-700 opacity-0 z-20" 
-                     style="pointer-events: none;" />
-
-                <!-- Spinner -->
+                <img id="albumCover" src="" alt="Album Art" class="absolute inset-0 w-full h-full object-cover rounded-full transition-opacity duration-700 opacity-0 z-20" style="pointer-events: none;" />
                 <div id="loadingSpinner" class="absolute inset-0 border-4 border-t-pink-500 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin hidden z-30"></div>
             </div>
 
-            <!-- Metadata Info (Dynamic) -->
             <div class="w-full text-center overflow-hidden px-4 min-h-[80px]">
-                <!-- Debug Info (Small) -->
                 <p id="debugInfo" class="text-[10px] text-slate-500 font-mono mb-1 truncate opacity-50">Esperando señal...</p>
-                
                 <h2 id="songTitle" class="text-2xl font-bold text-white mb-1 leading-tight line-clamp-2">RADIO FLY</h2>
                 <p id="artistName" class="text-pink-400 text-sm font-medium tracking-wide truncate">Frecuencia Digital</p>
             </div>
@@ -233,51 +234,48 @@
 
         <!-- Controls Area -->
         <div class="bg-slate-900/80 p-6 pb-10 z-10 rounded-t-3xl border-t border-white/5">
-            
-            <!-- Progress / Live Status -->
             <div class="flex justify-between items-center mb-6">
-                <!-- Left: Status -->
                 <div class="flex items-center gap-2">
                     <span id="liveBadge" class="w-2 h-2 rounded-full bg-red-500 hidden live-indicator"></span>
                     <span id="statusText" class="text-xs font-medium text-slate-400">Desconectado</span>
                 </div>
 
-                <!-- Right: Listeners Counter (Added) -->
                 <div class="flex items-center gap-2 text-xs font-mono text-pink-400 bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700/50">
                     <i class="fas fa-users text-[10px]"></i>
                     <span id="listenerCount">42</span>
                 </div>
             </div>
 
-            <!-- Main Buttons -->
             <div class="flex justify-between items-center mb-8">
                 <button class="text-slate-400 hover:text-white transition"><i class="fas fa-backward-step text-xl"></i></button>
-                
                 <button id="playBtn" class="w-16 h-16 rounded-full bg-pink-600 hover:bg-pink-500 text-white flex items-center justify-center shadow-lg shadow-pink-600/40 transition transform hover:scale-105 active:scale-95">
                     <i class="fas fa-play text-2xl ml-1"></i>
                 </button>
-                
                 <button class="text-slate-400 hover:text-white transition"><i class="fas fa-forward-step text-xl"></i></button>
             </div>
 
-            <!-- Volume Control -->
             <div class="flex items-center gap-4 text-slate-400">
                 <i class="fas fa-volume-low text-xs"></i>
                 <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8">
                 <i class="fas fa-volume-high text-xs"></i>
             </div>
-
         </div>
 
-        <!-- Audio Element -->
         <audio id="audioPlayer" crossorigin="anonymous">
             <source src="https://stream.zeno.fm/67ep5htcxf9uv" type="audio/mpeg">
-            Tu navegador no soporta el elemento de audio.
         </audio>
 
     </div>
 
     <script>
+        // REDIRECCIÓN A PLAY STORE
+        const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=radio.fly2026&pcampaignid=web_share";
+        const goToStoreBtn = document.getElementById('goToStoreBtn');
+
+        goToStoreBtn.addEventListener('click', () => {
+            window.location.href = PLAY_STORE_URL;
+        });
+
         // DOM Elements
         const playBtn = document.getElementById('playBtn');
         const refreshMetaBtn = document.getElementById('refreshMetaBtn');
@@ -292,38 +290,29 @@
         const albumCoverEl = document.getElementById('albumCover');
         const listenerCountEl = document.getElementById('listenerCount');
         const clockDisplayEl = document.getElementById('clockDisplay');
-        
-        // Vinyl Elements
-        const vinylRecordEl = document.getElementById('vinylRecord');
         const discContainerEl = document.getElementById('discContainer');
-        
         const debugInfoEl = document.getElementById('debugInfo');
         const canvas = document.getElementById('visualizer');
         const ctx = canvas.getContext('2d');
 
-        // State
         let isPlaying = false;
 
-        // --- CLOCK FUNCTIONALITY (ARGENTINA TIME) ---
+        // Clock Functionality
         function updateClock() {
             const now = new Date();
-            // Force Argentina Timezone
             const timeString = now.toLocaleTimeString('es-AR', {
                 timeZone: 'America/Argentina/Buenos_Aires',
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit', // Added seconds
+                second: '2-digit',
                 hour12: false 
             });
             clockDisplayEl.textContent = timeString;
         }
-        
-        // Update immediately and then every second
         updateClock();
         setInterval(updateClock, 1000);
 
-        // --- LISTENER SIMULATION LOGIC ---
-        // Retrieve saved listeners from LocalStorage or start at 42
+        // Listener Simulation
         let currentListeners = parseInt(localStorage.getItem('radioFlyListeners')) || 42;
         if (currentListeners < 42) currentListeners = 42;
         listenerCountEl.textContent = currentListeners;
@@ -353,15 +342,11 @@
             localStorage.setItem('radioFlyListeners', currentListeners);
             
             const nextUpdate = Math.floor(Math.random() * (180000 - 40000 + 1)) + 40000;
-            // console.log(`Next listener update in: ${nextUpdate/1000}s`);
-            
             setTimeout(simulateListeners, nextUpdate);
         }
-
         setTimeout(simulateListeners, 60000); 
 
-        
-        // --- ZENO FM METADATA CONFIGURATION ---
+        // Metadata Zeno FM
         const MOUNT_KEY = "67ep5htcxf9uv"; 
         const METADATA_URL = `https://api.zeno.fm/mounts/metadata/subscribe/${MOUNT_KEY}`;
         let eventSource = null;
@@ -371,9 +356,7 @@
             if (eventSource && eventSource.readyState !== 2) return; 
 
             if (window.EventSource) {
-                console.log("Iniciando conexión de metadatos...");
                 debugInfoEl.textContent = "Conectando datos...";
-                
                 eventSource = new EventSource(METADATA_URL);
 
                 eventSource.onopen = function() {
@@ -410,12 +393,11 @@
             setTimeout(() => icon.classList.remove('fa-spin'), 1000);
         });
 
-        // --- ALBUM ART FETCHING (ITUNES API) ---
+        // iTunes API Album Art
         let currentSearchTerm = "";
 
         async function fetchAlbumArt(artist, song) {
             const query = `${artist} ${song}`;
-            
             const cleanQuery = query
                 .replace(/ft\.|feat\.|featuring/gi, "")
                 .replace(/\(.*\)/g, "")
@@ -443,7 +425,6 @@
                     const artworkUrl = data.results[0].artworkUrl100.replace('100x100', '600x600');
                     showAlbumArt(artworkUrl);
                 } else {
-                    console.log("No album found for song, falling back to vinyl.");
                     hideAlbumArt();
                 }
             } catch (error) {
@@ -457,8 +438,7 @@
 
             albumCoverEl.src = url;
             albumCoverEl.onload = () => {
-                albumCoverEl.style.opacity = "1"; // Fade In Album Art
-                // Stop spinning when art is visible so it stays upright
+                albumCoverEl.style.opacity = "1";
                 discContainerEl.classList.remove('is-spinning');
                 discContainerEl.style.transform = 'rotate(0deg)'; 
             };
@@ -466,10 +446,7 @@
 
         function hideAlbumArt() {
             if (albumCoverEl.style.opacity === "0") return;
-            
-            albumCoverEl.style.opacity = "0"; // Fade Out
-            
-            // Resume spinning if currently playing
+            albumCoverEl.style.opacity = "0";
             if (isPlaying) {
                 discContainerEl.classList.add('is-spinning');
                 discContainerEl.style.animationPlayState = 'running';
@@ -479,7 +456,6 @@
 
         function updateMetadataUI(rawTitle) {
             debugInfoEl.textContent = "Info: " + rawTitle.substring(0, 25);
-            
             if (!rawTitle) return;
 
             const parts = rawTitle.split(' - ');
@@ -494,12 +470,11 @@
             if (songTitleEl.textContent !== song || artistNameEl.textContent !== artist) {
                 songTitleEl.textContent = song;
                 artistNameEl.textContent = artist;
-                
                 fetchAlbumArt(artist, song);
             }
         }
 
-        // --- VISUALIZER ---
+        // Visualizer
         let animationId;
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
@@ -524,7 +499,6 @@
         function playRadio() {
             statusText.textContent = "Conectando...";
             loadingSpinner.classList.remove('hidden');
-            
             connectMetadata(); 
 
             player.play().then(() => {
@@ -556,21 +530,16 @@
                 liveBadge.classList.remove('hidden');
                 loadingSpinner.classList.add('hidden');
                 
-                // --- VINYL ANIMATION LOGIC ---
-                // Only spin if we are NOT showing the square album art
                 if (!isArtVisible) {
                     discContainerEl.classList.add('is-spinning');
                     discContainerEl.style.animationPlayState = 'running';
                 }
-                
             } else {
                 playIcon.classList.remove('fa-pause');
                 playIcon.classList.add('fa-play', 'ml-1');
                 statusText.textContent = "Pausado";
                 statusText.classList.remove('text-pink-400');
                 liveBadge.classList.add('hidden');
-                
-                // Stop Animation
                 discContainerEl.style.animationPlayState = 'paused';
             }
         }
@@ -581,7 +550,6 @@
 
         function drawVisualizer() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             const width = canvas.clientWidth / barCount;
             
             for (let i = 0; i < barCount; i++) {
@@ -598,7 +566,6 @@
                 gradient.addColorStop(1, '#8b5cf6'); 
 
                 ctx.fillStyle = gradient;
-                
                 const x = i * width;
                 const y = (canvas.clientHeight / dpr) - barHeight; 
                 
@@ -613,9 +580,7 @@
         }
 
         function startVisualizer() {
-            if (!animationId) {
-                drawVisualizer();
-            }
+            if (!animationId) drawVisualizer();
         }
 
         function stopVisualizer() {
@@ -642,7 +607,6 @@
             ctx.scale(dpr, dpr);
             if (!isPlaying) stopVisualizer();
         });
-
     </script>
 </body>
 </html>
