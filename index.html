@@ -160,7 +160,7 @@
             
             <h3 class="text-2xl font-bold text-white mb-2">¡Hey... nos actualizamos! 🚀</h3>
             <p class="text-slate-300 text-sm mb-4 leading-relaxed">
-                Llegó una nueva versión de <strong class="text-pink-400">Radio Fly 103.5</strong> a la Google Play Store.
+                Llegó una nueva versión oficial de <strong class="text-pink-400">Radio Fly 103.5</strong> a la Google Play Store.
             </p>
 
             <!-- RECUADRO CON INSTRUCCIONES -->
@@ -177,12 +177,12 @@
 
                     <div class="flex items-start gap-2.5">
                         <span class="bg-red-500/20 text-red-400 font-bold px-2 py-0.5 rounded-md text-[11px] border border-red-500/30 shrink-0">2</span>
-                        <p class="leading-snug">Desde esa misma pantalla, tocá en <strong class="text-white">Desinstalár..</strong> el paso 3.</p>
+                        <p class="leading-snug">Desde esa misma pantalla, tocá en <strong class="text-white">Desinstalar</strong> esta versión.</p>
                     </div>
                     
                     <div class="flex items-start gap-2.5">
                         <span class="bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded-md text-[11px] border border-green-500/30 shrink-0">3</span>
-                        <p class="leading-snug">Volvé a tocar en <strong class="text-white">Instalar</strong> para disfrutar de la versión nueva version.</p>
+                        <p class="leading-snug">Volvé a tocar en <strong class="text-white">Instalar</strong> para disfrutar la versión nueva.</p>
                     </div>
                 </div>
             </div>
@@ -271,9 +271,27 @@
         // REDIRECCIÓN A PLAY STORE
         const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=radio.fly2026&pcampaignid=web_share";
         const goToStoreBtn = document.getElementById('goToStoreBtn');
+        const updateModal = document.getElementById('updateModal');
 
         goToStoreBtn.addEventListener('click', () => {
             window.location.href = PLAY_STORE_URL;
+        });
+
+        // FORZAR QUE EL MODAL SIEMPRE ESTÉ VISIBLE AL VOLVER
+        function ensureModalVisible() {
+            if (updateModal) {
+                updateModal.style.display = 'flex';
+                updateModal.classList.remove('hidden');
+            }
+        }
+
+        // Detecta cuando la ventana recupera el foco o la app vuelve a primer plano
+        window.addEventListener('pageshow', ensureModalVisible);
+        window.addEventListener('focus', ensureModalVisible);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                ensureModalVisible();
+            }
         });
 
         // DOM Elements
